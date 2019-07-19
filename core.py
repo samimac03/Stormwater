@@ -186,10 +186,12 @@ class Agent(object):
                        # accumulated_info[key] += value
                     callbacks.on_action_end(action)
 
-                    print(done)
+                   # print(r)
+                   
                     reward += r
                     if done:
                         break
+                
                 if nb_max_episode_steps and episode_step >= nb_max_episode_steps - 1:
                     # Force a terminal state.
                     done = True
@@ -204,6 +206,7 @@ class Agent(object):
                     'episode': episode,
                 #    'info': accumulated_info,
                 }
+               # print(episode_reward, "asdasda")
                 callbacks.on_step_end(episode_step, step_logs)
                 episode_step += 1
                 self.step += 1

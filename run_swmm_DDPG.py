@@ -40,7 +40,7 @@ actor.add(Dense(16))
 actor.add(Activation('relu'))
 actor.add(Dense(nb_actions))
 actor.add(Activation('linear'))
-#print(actor.summary())
+
 
 action_input = Input(shape=(nb_actions,), name='action_input')
 observation_input = Input(shape=(1,) + (7,), name='observation_input')
@@ -55,10 +55,8 @@ x = Activation('relu')(x)
 x = Dense(1)(x)
 x = Activation('linear')(x)
 critic = Model(inputs=[action_input, observation_input], outputs=x)
-#print(critic.summary())
 
-# Finally, we configure and compile our agent. You can use every built-in Keras optimizer and
-# even the metrics!
+
 memory = SequentialMemory(limit=10000, window_length=1)
 random_process = OrnsteinUhlenbeckProcess(size=nb_actions, theta=.15, mu=0., sigma=.3)
 agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_action_input=action_input,
@@ -66,11 +64,15 @@ agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_acti
                   random_process=random_process, gamma=.99, target_model_update=1e-3)
 agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
-agent.fit(env, nb_steps=100, visualize=False, verbose=0, nb_max_episode_steps=900)
-print("testing")
+agent.fit(env, nb_steps=100, visualize=False, verbose=0, nb_max_episode_steps=95)
+
 agent.save_weights('ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
-agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=900)
+agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=95)
+
+agent.fit(env, nb_steps=100, visualize=False, verbose=0, nb_max_episode_steps=95)
+
+agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=95)
 
 '''
 
