@@ -2,10 +2,10 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 from pyswmm import Simulation, Nodes, Links
-from actor_critic import Actor, Critic
-from replay_memory import ReplayMemoryAgent, random_indx, create_minibatch
-from pyswmm_utils import OrnsteinUhlenbeckProcess, save_state, save_action, gen_noise
-import Env
+#from actor_critic import Actor, Critic
+#from replay_memory import ReplayMemoryAgent, random_indx, create_minibatch
+#from pyswmm_utils import OrnsteinUhlenbeckProcess, save_state, save_action, gen_noise
+import Env as enviornment
 
 """
 This script runs Deep Q-Network RL algorithm for control
@@ -19,19 +19,19 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Flatten, Input, Concatenate
 from keras.optimizers import Adam
 
-from rl.agents import DDPGAgent
-from rl.memory import SequentialMemory
-from rl.random import OrnsteinUhlenbeckProcess
+from ddpg import DDPGAgent
+from memory import SequentialMemory
+from rand import OrnsteinUhlenbeckProcess
 
 
 
 # Get the environment and extract the number of actions.
-env = new Env()
+env = enviornment.Env()
 nb_actions = 2
 
 # Next, we build a very simple model.
 actor = Sequential()
-actor.add(Flatten(input_shape=(1,) + 2))
+actor.add(Flatten(input_shape=(1,) + (3,)))
 actor.add(Dense(16))
 actor.add(Activation('relu'))
 actor.add(Dense(16))
@@ -43,7 +43,7 @@ actor.add(Activation('linear'))
 print(actor.summary())
 
 action_input = Input(shape=(nb_actions,), name='action_input')
-observation_input = Input(shape=(1,) + 2, name='observation_input')
+observation_input = Input(shape=(1,) + (3,), name='observation_input')
 flattened_observation = Flatten()(observation_input)
 x = Concatenate()([action_input, flattened_observation])
 x = Dense(32)(x)
@@ -72,7 +72,7 @@ agent.save_weights('ddpg_{}_weights.h5f'.format(ENV_NAME), overwrite=True)
 
 agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=200)
 
-
+'''
 
 
 plt.subplot(2, 2, 1)
@@ -124,3 +124,4 @@ plt.tight_layout()
 plt.savefig("smart_stormwater_rl/RL_DDPG/plots/ddpg_model_rewards_" + str(num_episodes) + rwd + "epi" +
             str(best_episode) + ".png", dpi=300)
 plt.close()
+'''

@@ -7,9 +7,9 @@ import numpy as np
 import keras.backend as K
 import keras.optimizers as optimizers
 
-from rl.core import Agent
-from rl.random import OrnsteinUhlenbeckProcess
-from rl.util import *
+from core import Agent
+from rand import OrnsteinUhlenbeckProcess
+from util import *
 
 
 def mean_q(y_true, y_pred):

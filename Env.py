@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from reward_functions import reward_function2 as reward_function
-
+from pyswmm import Simulation, Nodes, Links
 class Env:
     def reset(self):
 
@@ -32,6 +32,7 @@ class Env:
         self.link_object = Links(self.sim)
 
         self.sim.start()
+        print(self.sim.end_time, self.sim.start_time)
         self.sim_len = self.sim.end_time - self.sim.start_time
         self.num_steps = int(self.sim_len.total_seconds()/self.control_time_step)
 
