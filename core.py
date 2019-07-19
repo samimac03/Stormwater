@@ -145,10 +145,10 @@ class Agent(object):
                         if self.processor is not None:
                             action = self.processor.process_action(action)
                         callbacks.on_action_begin(action)
-                        observation, reward, done, info = env.step(action)
+                        observation, reward, done  = env.step(action)
                         observation = deepcopy(observation)
                         if self.processor is not None:
-                            observation, reward, done, info = self.processor.process_step(observation, reward, done, info)
+                            observation, reward, done  = self.processor.process_step(observation, reward, done )
                         callbacks.on_action_end(action)
                         if done:
                             warnings.warn('Env ended before {} random steps could be performed at the start. You should probably lower the `nb_max_start_steps` parameter.'.format(nb_random_start_steps))
@@ -170,21 +170,23 @@ class Agent(object):
                 if self.processor is not None:
                     action = self.processor.process_action(action)
                 reward = np.float32(0)
-                accumulated_info = {}
+               # accumulated_info = {}
                 done = False
                 for _ in range(action_repetition):
                     callbacks.on_action_begin(action)
-                    observation, r, done, info = env.step(action)
+                    observation, r, done  = env.step(action)
                     observation = deepcopy(observation)
                     if self.processor is not None:
-                        observation, r, done, info = self.processor.process_step(observation, r, done, info)
-                    for key, value in info.items():
-                        if not np.isreal(value):
-                            continue
-                        if key not in accumulated_info:
-                            accumulated_info[key] = np.zeros_like(value)
-                        accumulated_info[key] += value
+                        observation, r, done  = self.processor.process_step(observation, r, done )
+                   # for key, value in info.items():
+                    #    if not np.isreal(value):
+                     #       continue
+                      #  if key not in accumulated_info:
+                        #    accumulated_info[key] = np.zeros_like(value)
+                       # accumulated_info[key] += value
                     callbacks.on_action_end(action)
+
+                    print(done)
                     reward += r
                     if done:
                         break
@@ -200,7 +202,7 @@ class Agent(object):
                     'reward': reward,
                     'metrics': metrics,
                     'episode': episode,
-                    'info': accumulated_info,
+                #    'info': accumulated_info,
                 }
                 callbacks.on_step_end(episode_step, step_logs)
                 episode_step += 1
@@ -234,7 +236,9 @@ class Agent(object):
             did_abort = True
         callbacks.on_train_end(logs={'did_abort': did_abort})
         self._on_train_end()
-
+       
+        env.close()
+        
         return history
 
     def test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True,
@@ -322,10 +326,10 @@ class Agent(object):
                 if self.processor is not None:
                     action = self.processor.process_action(action)
                 callbacks.on_action_begin(action)
-                observation, r, done, info = env.step(action)
+                observation, r, done  = env.step(action)
                 observation = deepcopy(observation)
                 if self.processor is not None:
-                    observation, r, done, info = self.processor.process_step(observation, r, done, info)
+                    observation, r, done  = self.processor.process_step(observation, r, done )
                 callbacks.on_action_end(action)
                 if done:
                     warnings.warn('Env ended before {} random steps could be performed at the start. You should probably lower the `nb_max_start_steps` parameter.'.format(nb_random_start_steps))
@@ -343,21 +347,21 @@ class Agent(object):
                 if self.processor is not None:
                     action = self.processor.process_action(action)
                 reward = 0.
-                accumulated_info = {}
+               # accumulated_info = {}
                 for _ in range(action_repetition):
                     callbacks.on_action_begin(action)
-                    observation, r, d, info = env.step(action)
+                    observation, r, d  = env.step(action)
                     observation = deepcopy(observation)
                     if self.processor is not None:
-                        observation, r, d, info = self.processor.process_step(observation, r, d, info)
+                        observation, r, d  = self.processor.process_step(observation, r, d )
                     callbacks.on_action_end(action)
                     reward += r
-                    for key, value in info.items():
-                        if not np.isreal(value):
-                            continue
-                        if key not in accumulated_info:
-                            accumulated_info[key] = np.zeros_like(value)
-                        accumulated_info[key] += value
+                    #for key, value in info.items():
+                    #    if not np.isreal(value):
+                     #       continue
+                     #   if key not in accumulated_info:
+                      #      accumulated_info[key] = np.zeros_like(value)
+                      #  accumulated_info[key] += value
                     if d:
                         done = True
                         break
@@ -365,13 +369,13 @@ class Agent(object):
                     done = True
                 self.backward(reward, terminal=done)
                 episode_reward += reward
-
+               # print(episode_reward)
                 step_logs = {
                     'action': action,
                     'observation': observation,
                     'reward': reward,
                     'episode': episode,
-                    'info': accumulated_info,
+               #     'info': accumulated_info,
                 }
                 callbacks.on_step_end(episode_step, step_logs)
                 episode_step += 1
@@ -390,6 +394,7 @@ class Agent(object):
                 'episode_reward': episode_reward,
                 'nb_steps': episode_step,
             }
+    
             callbacks.on_episode_end(episode, episode_logs)
         callbacks.on_train_end()
         self._on_test_end()
@@ -508,7 +513,7 @@ class Processor(object):
     or write your own.
     """
 
-    def process_step(self, observation, reward, done, info):
+    def process_step(self, observation, reward, done ):
         """Processes an entire step by applying the processor to the observation, reward, and info arguments.
 
         # Arguments
@@ -522,8 +527,8 @@ class Processor(object):
         """
         observation = self.process_observation(observation)
         reward = self.process_reward(reward)
-        info = self.process_info(info)
-        return observation, reward, done, info
+        #info = self.process_info(info)
+        return observation, reward, done 
 
     def process_observation(self, observation):
         """Processes the observation as obtained from the environment for use in an agent and
@@ -549,7 +554,7 @@ class Processor(object):
         """
         return reward
 
-    def process_info(self, info):
+    def process_info(self ):
         """Processes the info as obtained from the environment for use in an agent and
         returns it.
 
@@ -625,7 +630,7 @@ class Env(object):
 
     def step(self, action):
         """Run one timestep of the environment's dynamics.
-        Accepts an action and returns a tuple (observation, reward, done, info).
+        Accepts an action and returns a tuple (observation, reward, done ).
 
         # Arguments
             action (object): An action provided by the environment.

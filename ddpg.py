@@ -188,13 +188,16 @@ class DDPGAgent(Agent):
             self.target_critic.reset_states()
 
     def process_state_batch(self, batch):
+        #print(batch)
         batch = np.array(batch)
         if self.processor is None:
-            return batch
+             return batch
         return self.processor.process_state_batch(batch)
 
     def select_action(self, state):
         batch = self.process_state_batch([state])
+       
+        #print(batch)
         action = self.actor.predict_on_batch(batch).flatten()
         assert action.shape == (self.nb_actions,)
 
@@ -209,6 +212,7 @@ class DDPGAgent(Agent):
     def forward(self, observation):
         # Select an action.
         state = self.memory.get_recent_state(observation)
+        
         action = self.select_action(state)  # TODO: move this into policy
 
         # Book-keeping.
@@ -231,6 +235,7 @@ class DDPGAgent(Agent):
     def backward(self, reward, terminal=False):
         # Store most recent experience in memory.
         if self.step % self.memory_interval == 0:
+           # print(self.recent_observation)
             self.memory.append(self.recent_observation, self.recent_action, reward, terminal,
                                training=self.training)
 

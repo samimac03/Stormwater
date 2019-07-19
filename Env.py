@@ -45,6 +45,7 @@ class Env:
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
 
         self.reward = reward_function(self.depths, self.flooding)
+        
         state = []
         
         for i in self.settings:
@@ -62,8 +63,9 @@ class Env:
         self.link_object['R1'].target_setting = action[0]
         self.link_object['R1'].target_setting = action[1]
 
-        self.sim.__next__()
-
+        #self.sim.__next__()
+        self.sim.step_advance(self.control_time_step)
+        
         self.settings = [self.link_object['R1'].current_setting,self.link_object['R2'].current_setting]
         self.depths = [self.node_object['St1'].depth,self.node_object['St2'].depth]
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
@@ -76,9 +78,9 @@ class Env:
             state.append(i)
         for i in self.flooding:
             state.append(i)
-        
+       # print(self.reward)
         return state, self.reward, self.done
 
     def close(self):
-        sim.report()
-        sim.close()
+        self.sim.report()
+        self.sim.close()
