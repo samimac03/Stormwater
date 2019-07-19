@@ -20,7 +20,7 @@ class Env:
         self.J3_flooding = []
         self.R1_position = []
         self.R2_position = []
-        self.done = True
+        self.done = False
 
         
         self.sim = Simulation(self.swmm_inp)
@@ -32,7 +32,7 @@ class Env:
         self.link_object = Links(self.sim)
 
         self.sim.start()
-        print(self.sim.end_time, self.sim.start_time)
+       # print(self.sim.end_time, self.sim.start_time)
         self.sim_len = self.sim.end_time - self.sim.start_time
         self.num_steps = int(self.sim_len.total_seconds()/self.control_time_step)
 
@@ -45,8 +45,16 @@ class Env:
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
 
         self.reward = reward_function(self.depths, self.flooding)
-
-        return [self.settings[0], self.depths[0], self.flooding[0]], self.reward, self.done
+        state = []
+        
+        for i in self.settings:
+            state.append(i)
+        for i in self.depths:
+            state.append(i)
+        for i in self.flooding:
+            state.append(i)
+            
+        return state
 
 
     def step(self, action):
@@ -61,8 +69,15 @@ class Env:
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
 
         self.reward = reward_function(self.depths, self.flooding)
-
-        return [self.settings, self.depths, self.flooding], self.reward, self.done
+        state = []
+        for i in self.settings:
+            state.append(i)
+        for i in self.depths:
+            state.append(i)
+        for i in self.flooding:
+            state.append(i)
+        
+        return state, self.reward, self.done
 
     def close(self):
         sim.report()

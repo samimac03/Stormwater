@@ -31,7 +31,7 @@ nb_actions = 2
 
 # Next, we build a very simple model.
 actor = Sequential()
-actor.add(Flatten(input_shape=(1,) + (3,)))
+actor.add(Flatten(input_shape=(1,) + (7,)))
 actor.add(Dense(16))
 actor.add(Activation('relu'))
 actor.add(Dense(16))
@@ -40,10 +40,10 @@ actor.add(Dense(16))
 actor.add(Activation('relu'))
 actor.add(Dense(nb_actions))
 actor.add(Activation('linear'))
-print(actor.summary())
+#print(actor.summary())
 
 action_input = Input(shape=(nb_actions,), name='action_input')
-observation_input = Input(shape=(1,) + (3,), name='observation_input')
+observation_input = Input(shape=(1,) + (7,), name='observation_input')
 flattened_observation = Flatten()(observation_input)
 x = Concatenate()([action_input, flattened_observation])
 x = Dense(32)(x)
@@ -55,7 +55,7 @@ x = Activation('relu')(x)
 x = Dense(1)(x)
 x = Activation('linear')(x)
 critic = Model(inputs=[action_input, observation_input], outputs=x)
-print(critic.summary())
+#print(critic.summary())
 
 # Finally, we configure and compile our agent. You can use every built-in Keras optimizer and
 # even the metrics!
@@ -68,9 +68,9 @@ agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
 agent.fit(env, nb_steps=10, visualize=False, verbose=0, nb_max_episode_steps=900)
 
-agent.save_weights('ddpg_{}_weights.h5f'.format(ENV_NAME), overwrite=True)
+agent.save_weights('ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
-agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=200)
+agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=900)
 
 '''
 
