@@ -1,10 +1,11 @@
-import os
-import numpy as np
-import matplotlib.pyplot as plt
-from pyswmm import Simulation, Nodes, Links
-#from actor_critic import Actor, Critic
-#from replay_memory import ReplayMemoryAgent, random_indx, create_minibatch
-#from pyswmm_utils import OrnsteinUhlenbeckProcess, save_state, save_action, gen_noise
+from keras.models import Sequential, Model
+from keras.layers import Dense, Activation, Flatten, Input, Concatenate
+from keras.optimizers import Adam
+
+from ddpg import DDPGAgent
+from memory import SequentialMemory
+from rand import OrnsteinUhlenbeckProcess
+
 import Env as enviornment
 
 """
@@ -15,13 +16,6 @@ Author: Sami Saliba
 Date: July 17, 2019
 
 """
-from keras.models import Sequential, Model
-from keras.layers import Dense, Activation, Flatten, Input, Concatenate
-from keras.optimizers import Adam
-
-from ddpg import DDPGAgent
-from memory import SequentialMemory
-from rand import OrnsteinUhlenbeckProcess
 
 
 
@@ -64,66 +58,10 @@ agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_acti
                   random_process=random_process, gamma=.99, target_model_update=1e-3)
 agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
-agent.fit(env, nb_steps=100, visualize=False, verbose=0, nb_max_episode_steps=95)
+agent.fit(env, nb_steps=5, visualize=False, verbose=0, nb_max_episode_steps=95)
 
 agent.save_weights('ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
 agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=95)
 
-agent.fit(env, nb_steps=100, visualize=False, verbose=0, nb_max_episode_steps=95)
 
-agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=95)
-
-'''
-
-
-plt.subplot(2, 2, 1)
-plt.plot(St1_depth)
-plt.ylim(0, 5)
-plt.title('St1_depth')
-plt.ylabel("ft")
-plt.xlabel("time step")
-
-plt.subplot(2, 2, 2)
-plt.plot(St2_depth)
-plt.ylim(0, 5)
-plt.title('St2_depth')
-plt.ylabel("ft")
-plt.xlabel("time step")
-
-plt.subplot(2, 2, 3)
-plt.plot(J3_depth)
-plt.ylim(0, 2)
-plt.title('J3_depth')
-plt.ylabel("ft")
-plt.xlabel("time step")
-
-# bar graph for total flooding
-plt.subplot(2, 2, 4)
-plt.bar([0, 1, 2], [sum(St1_flooding), sum(St2_flooding), sum(J3_flooding)], tick_label=["St1", "St2", "J3"])
-plt.ylim(0)
-plt.title('total_flooding')
-plt.ylabel("10^3 cubic feet")
-
-plt.tight_layout()
-# plt.show()
-plt.savefig("smart_stormwater_rl/RL_DDPG/plots/ddpg_model_results_" + str(best_episode) + rwd + ".png", dpi=300)
-plt.close()
-
-# plot rewards and actions
-plt.subplot(2, 1, 1)
-plt.plot(rewards_episode_tracker)
-plt.ylabel("average reward")
-plt.xlabel("episode")
-
-plt.subplot(2, 1, 2)
-plt.plot(R1_position)
-plt.plot(R2_position, linestyle='--')
-plt.ylim(0, 1)
-plt.ylabel("orifice position")
-plt.xlabel("time step")
-plt.tight_layout()
-plt.savefig("smart_stormwater_rl/RL_DDPG/plots/ddpg_model_rewards_" + str(num_episodes) + rwd + "epi" +
-            str(best_episode) + ".png", dpi=300)
-plt.close()
-'''

@@ -53,6 +53,7 @@ class Agent(object):
     def fit(self, env, nb_steps, action_repetition=1, callbacks=None, verbose=1,
             visualize=False, nb_max_start_steps=0, start_step_policy=None, log_interval=10000,
             nb_max_episode_steps=None):
+       # env.close()
         """Trains the agent on the given environment.
 
         # Arguments
@@ -146,6 +147,7 @@ class Agent(object):
                             action = self.processor.process_action(action)
                         callbacks.on_action_begin(action)
                         observation, reward, done  = env.step(action)
+                        #print("action")
                         observation = deepcopy(observation)
                         if self.processor is not None:
                             observation, reward, done  = self.processor.process_step(observation, reward, done )
@@ -175,6 +177,7 @@ class Agent(object):
                 for _ in range(action_repetition):
                     callbacks.on_action_begin(action)
                     observation, r, done  = env.step(action)
+                    #print(observation,r,done)
                     observation = deepcopy(observation)
                     if self.processor is not None:
                         observation, r, done  = self.processor.process_step(observation, r, done )
@@ -206,10 +209,10 @@ class Agent(object):
                     'episode': episode,
                 #    'info': accumulated_info,
                 }
-               # print(episode_reward, "asdasda")
+               # print(episode_reward)
                 callbacks.on_step_end(episode_step, step_logs)
                 episode_step += 1
-                self.step += 1
+                
 
                 if done:
                     # We are in a terminal state but the agent hasn't yet seen it. We therefore
@@ -232,6 +235,11 @@ class Agent(object):
                     observation = None
                     episode_step = None
                     episode_reward = None
+                    env.sim.report()
+                    env.sim.close()       
+        
+                    self.step += 1
+                    
         except KeyboardInterrupt:
             # We catch keyboard interrupts here so that training can be be safely aborted.
             # This is so common that we've built this right into this function, which ensures that
@@ -239,13 +247,14 @@ class Agent(object):
             did_abort = True
         callbacks.on_train_end(logs={'did_abort': did_abort})
         self._on_train_end()
-       
-        env.close()
-        
+       # env.graph()
         return history
 
     def test(self, env, nb_episodes=1, action_repetition=1, callbacks=None, visualize=True,
              nb_max_episode_steps=None, nb_max_start_steps=0, start_step_policy=None, verbose=1):
+       
+        
+        
         """Callback that is called before training begins.
 
         # Arguments
