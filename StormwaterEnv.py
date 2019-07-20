@@ -4,17 +4,35 @@ from reward_functions import reward_function2 as reward_function
 from pyswmm import Simulation, Nodes, Links
 #import matplotlib as plt
 
+# import gym
 
-class Env:
+
+class StormwaterEnv():
+    metadata = {'render.modes': ['human']}
+
+    def __init__(self, swmm_inp="simple_2_ctl_smt.inp"):
+        super(StormwaterEnv, self).__init__()
+
+        self.swmm_inp = swmm_inp        
+        self.temp_height = np.zeros(2, dtype='int32')  # St1.depth, St2.depth
+        self.temp_valve = np.zeros(2, dtype='int32')  # R1.current_setting, R2.current_setting
+       
+        # self.St1_depth = []
+        # self.St2_depth = []
+        # self.J3_depth = []
+        # self.St1_flooding = []
+        # self.St2_flooding = []
+        # self.J3_flooding = []
+        # self.R1_position = []
+        # self.R2_position = []
+
     def reset(self):
         
    #     self.total_reward.append(self.eps_reward)
         
-        self.swmm_inp = "simple_2_ctl_smt.inp"
+        self.current_step = 0
 
-        self.temp_height = np.zeros(2, dtype='int32')  # St1.depth, St2.depth
-        self.temp_valve = np.zeros(2, dtype='int32')  # R1.current_setting, R2.current_setting
-        
+
         self.eps_reward = 0
         self.St1_depth = []
         self.St2_depth = []
@@ -65,8 +83,6 @@ class Env:
         
 
 
-
-
         self.reward = reward_function(self.depths, self.flooding)
         
         self.eps_reward += self.reward
@@ -85,7 +101,7 @@ class Env:
 
     def step(self, action):
 
-        
+        self.current_step += 1 # Decide whether this should be before or after taking actions
         
         self.link_object['R1'].target_setting = action[0]
         self.link_object['R1'].target_setting = action[1]
@@ -98,6 +114,9 @@ class Env:
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
         
         self.reward = reward_function(self.depths, self.flooding)
+
+
+
         state = []
         for i in self.settings:
             state.append(i)
@@ -106,11 +125,23 @@ class Env:
         for i in self.flooding:
             state.append(i)
     
-        return state, self.reward, self.done
+        return state, self.reward, self.done #, {} # {} is debugging information
     
     def close(self):
         self.sim.report()
         self.sim.close()
+
+
+
+    def render(self, mode="human"):
+        # This's probably not useful at all at the moment but should be here
+
+        return str(self.St1_depth) + "\n" + str(self.St2_depth) + "\n" + str(self.J3_depth) + "\n" + \
+        str(self.St1_flooding) + "\n" + str(self.St2_flooding) + "\n" + str(self.J3_flooding) + "\n" + \
+        str(self.R1_position) + "\n" + str(self.R2_position) + "\n"
+
+
+
 '''  
     def graph(self):
         plt.subplot(2, 2, 1)
