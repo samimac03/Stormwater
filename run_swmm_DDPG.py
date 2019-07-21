@@ -13,7 +13,7 @@ from StormwaterEnv import StormwaterEnv
 This script runs Deep Q-Network RL algorithm for control
 of stormwater systems using a SWMM model as the environment
 
-Author: Sami Saliba
+Author: Sami Saliba, Kaan Katircioglu
 Date: July 17, 2019
 
 """
@@ -61,8 +61,9 @@ agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
 agent.fit(env, nb_steps=5, visualize=False, verbose=0, nb_max_episode_steps=95)
 
-agent.save_weights('ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
+agent.save_weights('weights/ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
 agent.test(env, nb_episodes=5, visualize=True, nb_max_episode_steps=95)
 
 
+env.graph("plots/test/test_plot_")

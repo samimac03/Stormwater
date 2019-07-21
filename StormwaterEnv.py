@@ -2,12 +2,12 @@ import numpy as np
 import random
 from reward_functions import reward_function2 as reward_function
 from pyswmm import Simulation, Nodes, Links
-#import matplotlib as plt
+import matplotlib.pyplot as plt
 
-# import gym
+import gym
 
 
-class StormwaterEnv():
+class StormwaterEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
     def __init__(self, swmm_inp="simple_2_ctl_smt.inp"):
@@ -25,6 +25,8 @@ class StormwaterEnv():
         # self.J3_flooding = []
         # self.R1_position = []
         # self.R2_position = []
+
+        self.log_dumps = []
 
     def reset(self):
         
@@ -115,16 +117,23 @@ class StormwaterEnv():
         
         self.reward = reward_function(self.depths, self.flooding)
 
-
+        
 
         state = []
         for i in self.settings:
             state.append(i)
         for i in self.depths:
             state.append(i)
+
         for i in self.flooding:
             state.append(i)
-    
+
+        # print("self.settings", self.settings)
+        # print("self.depths", self.depths)
+        # print("self.flooding", self.flooding)
+        if self.current_step == 1:
+            self.log_dumps.append([])
+        self.log_dumps[-1].append((self.reward, [self.settings, self.depths, self.flooding], self.current_step))
         return state, self.reward, self.done #, {} # {} is debugging information
     
     def close(self):
@@ -141,6 +150,100 @@ class StormwaterEnv():
         str(self.R1_position) + "\n" + str(self.R2_position) + "\n"
 
 
+    def graph(self, location):
+
+        for plot_num, dump in enumerate(self.log_dumps):
+
+            settings, depths, floodings = [[], []], [[], []], [[], [], []]
+            rewards = []
+            timesteps = []
+        
+            for reward, state, timestep in dump:
+
+                rewards.append(reward)
+                setting, depth, flooding = state
+                for i, R in enumerate(settings):
+                    R.append(setting[i])
+                for i, S_depth in enumerate(depths):
+                    S_depth.append(depth[i])
+                for i, S_flooding in enumerate(floodings):
+                    S_flooding.append(flooding[i])
+        
+
+            # can automate this part too but too lazy atm.
+            plt.subplot(3, 3, 1)
+            plt.plot(settings[0])
+            # plt.ylim(0, 5)
+            plt.title('R1')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 2)
+            plt.plot(settings[1])
+            # plt.ylim(0, 5)
+            plt.title('R2')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 3)
+            plt.plot(depths[0])
+            # plt.ylim(0, 5)
+            plt.title('S1 Depth')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 4)
+            plt.plot(depths[1])
+            # plt.ylim(0, 5)
+            plt.title('S2 Depth')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 5)
+            plt.plot(floodings[0])
+            # plt.ylim(0, 5)
+            plt.title('S1 flooding')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 6)
+            plt.plot(floodings[1])
+            # plt.ylim(0, 5)
+            plt.title('S2 flooding')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 7)
+            plt.plot(floodings[2])
+            # plt.ylim(0, 5)
+            plt.title('J3 Flooding')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 8)
+            plt.plot(rewards)
+            # plt.ylim(0, 5)
+            plt.title('Rewards')
+            plt.ylabel("Idk the units")
+            plt.xlabel("time step")
+
+            plt.subplot(3, 3, 9)
+            plt.bar([0, 1, 2], [sum(self.St1_flooding), sum(self.St2_flooding), sum(self.J3_flooding)], tick_label=["St1", "St2", "J3"])
+            plt.ylim(0)
+            plt.title('total_flooding')
+            plt.ylabel("10^3 cubic feet")
+            plt.xlabel("time step")
+
+            plt.tight_layout()
+
+            plt.savefig(location + str(plot_num), dpi=300)
+            plt.clf()
+
+
+        
+        # plt.show()
+        
+        # State has self.settings (R1, R2), self.depths (s1, s2), self.floodings (s1, s2, j3)
 
 '''  
     def graph(self):
