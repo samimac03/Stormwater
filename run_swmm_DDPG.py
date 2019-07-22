@@ -6,13 +6,14 @@ from ddpg import DDPGAgent
 from memory import SequentialMemory
 from rand import OrnsteinUhlenbeckProcess
 
-import Env as enviornment
+#import Env as enviornment
+from StormwaterEnv import StormwaterEnv
 
 """
 This script runs Deep Q-Network RL algorithm for control
 of stormwater systems using a SWMM model as the environment
 
-Author: Sami Saliba
+Author: Sami Saliba, Kaan Katircioglu
 Date: July 17, 2019
 
 """
@@ -20,7 +21,7 @@ Date: July 17, 2019
 
 
 # Get the environment and extract the number of actions.
-env = enviornment.Env()
+env = StormwaterEnv()
 nb_actions = 2
 
 # Next, we build a very simple model.
@@ -60,8 +61,9 @@ agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
 agent.fit(env, nb_steps=5, visualize=False, verbose=0, nb_max_episode_steps=95)
 
-agent.save_weights('ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
+agent.save_weights('weights/ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
-agent.test(env, nb_episodes=5, visualize=False, nb_max_episode_steps=95)
+agent.test(env, nb_episodes=5, visualize=True, nb_max_episode_steps=95)
 
 
+env.graph("plots/test/test_plot_")
