@@ -175,70 +175,65 @@ class StormwaterEnv(gym.Env):
             
         
 
-            plt.subplot(5, 2, 1)
+            plt.subplot(2, 2, 1)
             plt.plot(settings[0])
-            # plt.ylim(0, 5)
+            plt.ylim(0, 1)
             plt.title('R1')
             plt.ylabel("Valve Opening")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 2)
+            plt.subplot(2, 2, 2)
             plt.plot(settings[1])
-            # plt.ylim(0, 5)
+            plt.ylim(0, 1)
             plt.title('R2')
             plt.ylabel("Valve Opening")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 3)
+            plt.subplot(2, 2, 3)
             plt.plot(depths[0])
-            # plt.ylim(0, 5)
+            plt.ylim(0, 5)
             plt.title('S1 Depth')
             plt.ylabel("Feet")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 4)
+            plt.subplot(2, 2, 4)
             plt.plot(depths[1])
-            # plt.ylim(0, 5)
+            plt.ylim(0, 5)
             plt.title('S2 Depth')
             plt.ylabel("Feet")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 5)
+            plt.tight_layout()
+            if(plot == 5):
+                plt.savefig(location + "TEST_" + str(timestep) + "_STATES", dpi=300)
+            else:
+                plt.savefig(location + str(timestep) + "_STATES", dpi=300)
+           
+            plt.clf()
+
+
+            plt.subplot(2, 2, 1)
             plt.plot(floodings[0])
-            # plt.ylim(0, 5)
+            #plt.ylim(0, 5)
             plt.title('S1 flooding')
             plt.ylabel("Feet")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 6)
+            plt.subplot(2, 2, 2)
             plt.plot(floodings[1])
             # plt.ylim(0, 5)
             plt.title('S2 flooding')
             plt.ylabel("Feet")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 7)
+            plt.subplot(2, 2, 3)
             plt.plot(floodings[2])
             # plt.ylim(0, 5)
             plt.title('J3 Flooding')
             plt.ylabel("Feet")
             plt.xlabel("time step")
 
-            plt.subplot(5, 2, 8)
-            plt.plot(rewards)
-            # plt.ylim(0, 5)
-            plt.title('Rewards')
-            plt.ylabel("Reward")
-            plt.xlabel("time step")
-
-            plt.subplot(5, 2, 9)
-            plt.plot(self.total_rewards)
-            plt.title('Total Rewards')
-            plt.ylabel("Reward")
-            plt.xlabel("eps")
-
-
-            plt.subplot(5, 2, 9)
+            plt.subplot(2, 2, 4)
             plt.bar([0, 1, 2], [sum(floodings[0]), sum(floodings[1]), sum(floodings[2])], tick_label=["St1", "St2", "J3"])
             plt.ylim(0)
             plt.title('total_flooding')
@@ -248,8 +243,31 @@ class StormwaterEnv(gym.Env):
             plt.tight_layout()
 
             if(plot == 5):
-                plt.savefig(location + "TEST_" + str(timestep), dpi=300)
+                plt.savefig(location + "TEST_" + str(timestep) + "_OUTPUT", dpi=300)
             else:
-                plt.savefig(location + str(timestep), dpi=300)
+                plt.savefig(location + str(timestep) + "_OUTPUT", dpi=300)
+            
+            plt.clf() 
+
+
+            plt.subplot(2, 1, 1)
+            plt.plot(rewards)
+            # plt.ylim(0, 5)
+            plt.title('Rewards')
+            plt.ylabel("Reward")
+            plt.xlabel("time step")
+
+            plt.subplot(2, 1, 2)
+            plt.plot(self.total_rewards)
+            plt.title('Total Rewards')
+            plt.ylabel("Reward")
+            plt.xlabel("eps")
+
+            plt.tight_layout()
+
+            if(plot == 5):
+                plt.savefig(location + "TEST_" + str(timestep) + "_REWARDS", dpi=300)
+            else:
+                plt.savefig(location + str(timestep) + "_REWARDS", dpi=300)
             
             plt.clf() 

@@ -9,6 +9,9 @@ from rand import OrnsteinUhlenbeckProcess
 #import Env as enviornment
 from StormwaterEnv import StormwaterEnv
 
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 """
 This script runs Deep Q-Network RL algorithm for control
 of stormwater systems using a SWMM model as the environment
@@ -48,18 +51,18 @@ x = Activation('linear')(x)
 critic = Model(inputs=[action_input, observation_input], outputs=x)
 
 
-memory = SequentialMemory(limit=10000, window_length=1)
+memory = SequentialMemory(limit=100000, window_length=1)
 random_process = OrnsteinUhlenbeckProcess(size=nb_actions, theta=.15, mu=0., sigma=.3)
 agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_action_input=action_input,
                   memory=memory, nb_steps_warmup_critic=100, nb_steps_warmup_actor=100,
                   random_process=random_process, gamma=.99, target_model_update=1e-3)
 agent.compile(Adam(lr=.001, clipnorm=1.), metrics=['mae'])
 
-agent.fit(env, nb_steps=100000, visualize=False, verbose=0, nb_max_episode_steps=95)
+agent.fit(env, nb_steps=10000, visualize=False, verbose=0, nb_max_episode_steps=95)
 
 agent.save_weights('weights/ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
 agent.test(env, nb_episodes=1, visualize=True, nb_max_episode_steps=95)
 
 
-env.graph("plots/test/test_plot_")
+env.graph("plots/test_plot_")
