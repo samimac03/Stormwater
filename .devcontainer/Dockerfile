@@ -17,18 +17,22 @@ RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils 2>&1 \
     #
     # Verify git, process tools, lsb-release (common in install instructions for CLIs) installed
-    && apt-get -y install git procps lsb-release \
+    && apt-get -y install git procps lsb-release
     #
     # Install pylint
-    && pip install pylint \
-    && pip3 install -r requirements.txt
-    #
-    # Update Python environment based on requirements.txt (if presenet)
-    && if [ -f "/tmp/pip-tmp/requirements.txt" ]; then pip install -r /tmp/pip-tmp/requirements.txt; fi \
-    && rm -rf /tmp/pip-tmp \
+RUN pip install pylint
+RUN pip install keras==2.2.4 \
+&& pip install numpy==1.16.4 \ 
+&& pip install pyswmm==0.4.8 \
+&& pip install tensorflow_gpu==1.14.0 \
+&& pip install gym \ 
+&& pip install matplotlib
+#&& if [ -f "/tmp/pip-tmp/requirements.txt" ]; then pip install -r /tmp/pip-tmp/requirements.txt; fi \
+    #&& rm -rf /tmp/pip-tmp \
+   #
     #
     # Clean up
-    && apt-get autoremove -y \
+RUN command apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
