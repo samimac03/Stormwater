@@ -9,10 +9,14 @@ import gym
 class StormwaterEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, swmm_inp='simple2.inp'):
+    def __init__(self,swmm_inp="data/simple%s.inp"%(random.randint(1,5))):
+
+
         super(StormwaterEnv, self).__init__()
         self.total_rewards = []
         self.eps_reward = 0
+
+        self.num_steps = 0
 
         self.timestep = 0
 
@@ -28,11 +32,12 @@ class StormwaterEnv(gym.Env):
         # self.J3_flooding = []
         # self.R1_position = []
         # self.R2_position = []
-    
+            
         self.log_dumps = []
 
     def reset(self):
-
+        self.swmm_inp="data/simple%s.inp"%(random.randint(1,5))
+        
         self.total_rewards.append(self.eps_reward)
         #self.swmm_inp = 'simple%s.inp'%(random.randint(1,3))
         self.current_step = 0
@@ -47,6 +52,8 @@ class StormwaterEnv(gym.Env):
         self.J3_flooding = []
         self.R1_position = []
         self.R2_position = []
+        
+        self.num_steps = 0
         
         self.done = False
 
@@ -70,7 +77,7 @@ class StormwaterEnv(gym.Env):
 
 
         self.settings = [self.link_object['R1'].current_setting,self.link_object['R2'].current_setting]
-        self.depths = [self.node_object['St1'].depth,self.node_object['St2'].depth]
+        self.depths = [self.node_object['St1'].depth,self.node_object['St2'].depth,self.node_object['J3'].depth]
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
 
      
@@ -115,7 +122,7 @@ class StormwaterEnv(gym.Env):
         
         
         self.settings = [self.link_object['R1'].current_setting,self.link_object['R2'].current_setting]
-        self.depths = [self.node_object['St1'].depth,self.node_object['St2'].depth]
+        self.depths = [self.node_object['St1'].depth,self.node_object['St2'].depth,self.node_object['J3'].depth]
         self.flooding = [self.node_object['St1'].flooding, self.node_object['St2'].flooding, self.node_object['J3'].flooding]
         
         self.reward = reward_function(self.depths, self.flooding)
@@ -258,6 +265,7 @@ class StormwaterEnv(gym.Env):
             plt.xlabel("time step")
 
             plt.subplot(2, 1, 2)
+            plt.ylim(-500,0)
             plt.plot(self.total_rewards)
             plt.title('Total Rewards')
             plt.ylabel("Reward")

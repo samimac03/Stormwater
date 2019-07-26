@@ -123,6 +123,9 @@ class Agent(object):
         did_abort = False
         try:
             while self.step < nb_steps:
+                
+                #nb_max_episode_steps = env.num_steps-1
+
                 if observation is None:  # start of a new episode
                     callbacks.on_episode_begin(episode)
                     episode_step = np.int16(0)
@@ -131,6 +134,9 @@ class Agent(object):
                     # Obtain the initial observation by resetting the environment.
                     self.reset_states()
                     observation = deepcopy(env.reset())
+                    
+                    nb_max_episode_steps = (env.num_steps - 1)
+
                     if self.processor is not None:
                         observation = self.processor.process_observation(observation)
                     assert observation is not None
@@ -155,6 +161,8 @@ class Agent(object):
                         if done:
                             warnings.warn('Env ended before {} random steps could be performed at the start. You should probably lower the `nb_max_start_steps` parameter.'.format(nb_random_start_steps))
                             observation = deepcopy(env.reset())
+                            nb_max_episode_steps = (env.num_steps - 1)
+
                             if self.processor is not None:
                                 observation = self.processor.process_observation(observation)
                             break
@@ -323,6 +331,9 @@ class Agent(object):
             # Obtain the initial observation by resetting the environment.
             self.reset_states()
             observation = deepcopy(env.reset())
+            
+            nb_max_episode_steps = (env.num_steps - 1)
+            
             if self.processor is not None:
                 observation = self.processor.process_observation(observation)
             assert observation is not None
@@ -346,6 +357,7 @@ class Agent(object):
                 if done:
                     warnings.warn('Env ended before {} random steps could be performed at the start. You should probably lower the `nb_max_start_steps` parameter.'.format(nb_random_start_steps))
                     observation = deepcopy(env.reset())
+                    nb_max_episode_steps = (env.num_steps - 1)
                     if self.processor is not None:
                         observation = self.processor.process_observation(observation)
                     break
