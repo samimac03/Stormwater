@@ -2,9 +2,9 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Flatten, Input, Concatenate
 from keras.optimizers import Adam
 
-from core/ddpg import DDPGAgent
-from core/memory import SequentialMemory
-from core/rand import OrnsteinUhlenbeckProcess
+from ddpg import DDPGAgent
+from memory import SequentialMemory
+from rand import OrnsteinUhlenbeckProcess
 
 #import Env as enviornment
 from StormwaterEnv import StormwaterEnv

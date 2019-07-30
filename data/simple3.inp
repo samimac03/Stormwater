@@ -52,31 +52,41 @@ DRY_ONLY         NO
 ;;Name           Format    Interval SCF      Source    
 ;;-------------- --------- ------ ------ ----------
 Gage1            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr
-Gage2            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr_shift18min         
+Gage2            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr
+Gage3            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr         
+Gage4            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr          
 
 [SUBCATCHMENTS]
 ;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
 S1               Gage1            st1              70       30       1500     0.5      0                        
-S2               Gage2            st2              70       30       1500     0.5      0                        
+S2               Gage2            st2              70       30       1500     0.5      0
+S3               Gage3            St3              70       30       1500     0.5      0                        
+S4               Gage4            St4              70       30       1500     0.5      0                             
 
 [SUBAREAS]
 ;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
 ;;-------------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
 S1               0.01       0.1        0.05       0.05       25         OUTLET    
-S2               0.01       0.1        0.05       0.05       25         OUTLET    
+S2               0.01       0.1        0.05       0.05       25         OUTLET
+S3               0.01       0.1        0.05       0.05       25         OUTLET    
+S4               0.01       0.1        0.05       0.05       25         OUTLET  
+    
 
 [INFILTRATION]
 ;;Subcatchment   Suction    Ksat       IMD       
 ;;-------------- ---------- ---------- ----------
 S1               3.5        0.5        0.26      
-S2               3.5        0.5        0.25      
+S2               3.5        0.5        0.25    
+S3               3.5        0.5        0.25         
+S4               3.5        0.5        0.26     
 
 [JUNCTIONS]
 ;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
 ;;-------------- ---------- ---------- ---------- ---------- ----------
 J2               90         4          0          0          0         
-J3               88         2          0          0          0         
+J3               88         4          0          0          0
+J4               86         6          0          0          0          
 
 [OUTFALLS]
 ;;Name           Elevation  Type       Stage Data       Gated    Route To        
@@ -89,26 +99,36 @@ Out1             87         FREE                        NO
 ;;-------------- -------- ---------- ----------- ---------- ---------------------------- -------- --------          -------- --------
 St1              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
 St2              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
+St3              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
+St4              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
+St5              90       6          0.75       FUNCTIONAL 0         0         60000    0        0       
+St6              90       6          0.75       FUNCTIONAL 0         0         60000    0        0   
 
 [CONDUITS]
 ;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
 ;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
-C2               J2               J3               400        0.01       0          0          0          0         
-C3               J3               Out1             400        0.01       0          0          0          0         
+C2               J4               Out1             400        0.01       0          0          0          0         
 
 [ORIFICES]
 ;;Name           From Node        To Node          Type         Offset     Qcoeff     Gated    CloseTime 
 ;;-------------- ---------------- ---------------- ------------ ---------- ---------- -------- ----------
 R1               St1              J2               BOTTOM       0          0.65       NO       0.2         
 R2               St2              J2               BOTTOM       0          0.65       NO       0.2         
+R3               St4              J3               BOTTOM       0          0.65       NO       0.2         
+R4               St3              J3               BOTTOM       0          0.65       NO       0.2         
+R5               St5              J4               BOTTOM       0          0.65       NO       0.2         
+R6               St6              J4               BOTTOM       0          0.65       NO       0.2  
 
 [XSECTIONS]
 ;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
 ;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
-C2               CIRCULAR     1                0          0          0          1                    
-C3               CIRCULAR     1                0          0          0          1                    
+C2               CIRCULAR     1                0          0          0          1                                  
 R1               CIRCULAR     1                0          0          0
 R2               CIRCULAR     1                0          0          0
+R3               CIRCULAR     1                0          0          0
+R4               CIRCULAR     1                0          0          0
+R5               CIRCULAR     1                0          0          0
+R6               CIRCULAR     1                0          0          0
 
 [CURVES]
 ;;Name           Type       X-Value    Y-Value   

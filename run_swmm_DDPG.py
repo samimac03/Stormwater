@@ -25,7 +25,7 @@ env = StormwaterEnv()
 nb_actions = 6
 
 actor = Sequential()
-actor.add(Flatten(input_shape=(1,) + (22,)))
+actor.add(Flatten(input_shape=(1,) + (24,)))
 actor.add(Dense(40))
 actor.add(Activation('relu'))
 actor.add(Dense(60))
@@ -35,7 +35,7 @@ actor.add(Activation('sigmoid'))
 
 
 action_input = Input(shape=(nb_actions,), name='action_input')
-observation_input = Input(shape=(1,) + (22,), name='observation_input')
+observation_input = Input(shape=(1,) + (24,), name='observation_input')
 flattened_observation = Flatten()(observation_input)
 x = Concatenate()([action_input, flattened_observation])
 x = Dense(40)(x)
@@ -55,11 +55,11 @@ agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_acti
                   random_process=random_process, gamma=.995, target_model_update=1e-3)
 agent.compile(Adam(lr=.005, clipnorm=1.), metrics=['mae'])
 
-agent.fit(env, nb_steps=10000, visualize=False, verbose=0, nb_max_episode_steps=95)
+agent.fit(env, nb_steps=5, visualize=False, verbose=0, nb_max_episode_steps=95)
 
 agent.save_weights('weights/ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
-agent.test(env, nb_episodes=1, visualize=True, nb_max_episode_steps=95)
+agent.test(env, nb_episodes=1, visualize=False, nb_max_episode_steps=95)
 
 
 env.graph("plots/test_plot_")
