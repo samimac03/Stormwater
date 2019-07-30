@@ -7,7 +7,7 @@ import numpy as np
 import keras.backend as K
 import keras.optimizers as optimizers
 
-from core import Agent
+from RLcore import Agent
 from rand import OrnsteinUhlenbeckProcess
 from util import *
 

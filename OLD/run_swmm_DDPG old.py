@@ -2,9 +2,9 @@ from keras.models import Sequential, Model
 from keras.layers import Dense, Activation, Flatten, Input, Concatenate
 from keras.optimizers import Adam
 
-from ddpg import DDPGAgent
-from memory import SequentialMemory
-from rand import OrnsteinUhlenbeckProcess
+from core/ddpg import DDPGAgent
+from core/memory import SequentialMemory
+from core/rand import OrnsteinUhlenbeckProcess
 
 #import Env as enviornment
 from StormwaterEnv import StormwaterEnv
@@ -22,27 +22,27 @@ Date: July 17, 2019
 """
 
 env = StormwaterEnv()
-nb_actions = 6
+nb_actions = 2
 
 actor = Sequential()
-actor.add(Flatten(input_shape=(1,) + (22,)))
-actor.add(Dense(40))
+actor.add(Flatten(input_shape=(1,) + (8,)))
+actor.add(Dense(16))
 actor.add(Activation('relu'))
-actor.add(Dense(60))
+actor.add(Dense(32))
 actor.add(Activation('relu'))
 actor.add(Dense(nb_actions))
 actor.add(Activation('sigmoid'))
 
 
 action_input = Input(shape=(nb_actions,), name='action_input')
-observation_input = Input(shape=(1,) + (22,), name='observation_input')
+observation_input = Input(shape=(1,) + (8,), name='observation_input')
 flattened_observation = Flatten()(observation_input)
 x = Concatenate()([action_input, flattened_observation])
-x = Dense(40)(x)
+x = Dense(16)(x)
 x = Activation('relu')(x)
-x = Dense(60)(x)
+x = Dense(32)(x)
 x = Activation('relu')(x)
-x = Dense(60)(x)
+x = Dense(32)(x)
 x = Activation('relu')(x)
 x = Dense(1)(x)
 x = Activation('linear')(x)
