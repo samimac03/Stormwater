@@ -55,7 +55,7 @@ agent = DDPGAgent(nb_actions=nb_actions, actor=actor, critic=critic, critic_acti
                   random_process=random_process, gamma=.995, target_model_update=1e-3)
 agent.compile(Adam(lr=.005, clipnorm=1.), metrics=['mae'])
 
-agent.fit(env, nb_steps=1500, visualize=False, verbose=0, nb_max_episode_steps=95)
+agent.fit(env, nb_steps=10000, visualize=False, verbose=0, nb_max_episode_steps=95)
 
 agent.save_weights('weights/ddpg_{}_weights.h5f'.format("stormwater"), overwrite=True)
 
