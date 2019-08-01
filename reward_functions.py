@@ -29,8 +29,9 @@ def reward_function2(depth, flood):
     # weights = [1, 1]
     # depth_reward = np.dot(depth, np.transpose(weights))
     # flooding reward
+    
     flood = [-(2**(i)) if i > 0.0 else 0 for i in flood]
-    weights = [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    weights = [.5, .5, .5, .5, 2, 2, 5, 5, 5]
     flood_reward = np.dot(flood, np.transpose(weights))
     # Sum the total reward
     total_reward = flood_reward

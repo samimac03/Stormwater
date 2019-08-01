@@ -84,9 +84,9 @@ S4               3.5        0.5        0.26
 [JUNCTIONS]
 ;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
 ;;-------------- ---------- ---------- ---------- ---------- ----------
-J2               90         4          0          0          0         
-J3               88         4          0          0          0
-J4               86         6          0          0          0          
+J2               90         3          2.1          0          0         
+J3               88         3          1          0          0
+J4               86         4          1          0          0    
 
 [OUTFALLS]
 ;;Name           Elevation  Type       Stage Data       Gated    Route To        
@@ -107,7 +107,9 @@ St6              90       6          0.75       FUNCTIONAL 0         0         6
 [CONDUITS]
 ;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
 ;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
-C2               J4               Out1             400        0.01       0          0          0          0         
+C1               J2               St5             400        0.01       0          0          0          0 
+C2               J3               St6             400        0.01       0          0          0          0         
+C3               J4               Out1             400        0.01       0          0          0          0 
 
 [ORIFICES]
 ;;Name           From Node        To Node          Type         Offset     Qcoeff     Gated    CloseTime 
@@ -122,7 +124,9 @@ R6               St6              J4               BOTTOM       0          0.65 
 [XSECTIONS]
 ;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
 ;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
-C2               CIRCULAR     1                0          0          0          1                                  
+C1               CIRCULAR     1                0          0          0          1                                  
+C2               CIRCULAR     1                0          0          0          1 
+C3               CIRCULAR     1                0          0          0          1 
 R1               CIRCULAR     1                0          0          0
 R2               CIRCULAR     1                0          0          0
 R3               CIRCULAR     1                0          0          0
@@ -1069,47 +1073,6 @@ NODES ALL
 LINKS ALL
 
 [TAGS]
-
-[MAP]
-DIMENSIONS 0.000 0.000 10000.000 10000.000
-Units      None
-
-[COORDINATES]
-;;Node           X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-J2               2751.524           5609.756          
-J3               4457.901           5570.934          
-Out1             5818.916           5490.196          
-St1              2266.436           5720.877          
-St2              2211.855           4884.742          
-
-[VERTICES]
-;;Link           X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-
-[Polygons]
-;;Subcatchment   X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-S1               910.364            5416.049          
-S1               322.129            5081.562          
-S1               -1027.352          5577.525          
-S1               -1096.557          6592.520          
-S1               -323.777           7192.289          
-S1               668.149            6996.211          
-S1               1233.317           5935.080          
-S2               1400.637           3526.392          
-S2               994.490            2659.213          
-S2               -1003.315          2878.752          
-S2               -871.591           3723.977          
-S2               -816.707           4547.248          
-S2               884.720            4602.133          
-
-[SYMBOLS]
-;;Gage           X-Coord            Y-Coord           
-;;-------------- ------------------ ------------------
-Gage1            -801.615           7289.504          
-Gage2            -790.081           4798.155          
-
 
 [PROFILES]
 ;;Name           Links     
