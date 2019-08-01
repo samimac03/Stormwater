@@ -24,7 +24,6 @@ REPORT_STEP          00:01:00
 WET_STEP             00:05:00
 DRY_STEP             01:00:00
 ROUTING_STEP         0:00:10 
-RULE_STEP            00:00:00
 
 INERTIAL_DAMPING     PARTIAL
 NORMAL_FLOW_LIMITED  BOTH
@@ -52,46 +51,47 @@ DRY_ONLY         NO
 [RAINGAGES]
 ;;Name           Format    Interval SCF      Source    
 ;;-------------- --------- ------ ------ ----------
-Gage1            CUMULATIVE 0:15     1.0      TIMESERIES 1yr12hr         
-Gage2            CUMULATIVE 0:15     1.0      TIMESERIES 5yr12hr         
-Gage3            INTENSITY 1:00     1.0      TIMESERIES *               
-Gage4            INTENSITY 1:00     1.0      TIMESERIES *               
+Gage1            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr_shift18min
+Gage2            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr
+Gage3            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr         
+Gage4            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr          
 
 [SUBCATCHMENTS]
 ;;Name           Rain Gage        Outlet           Area     %Imperv  Width    %Slope   CurbLen  SnowPack        
 ;;-------------- ---------------- ---------------- -------- -------- -------- -------- -------- ----------------
 S1               Gage1            st1              70       30       1500     0.5      0                        
-S2               Gage2            st2              70       30       1500     0.5      0                        
-S3               Gage3            St3              5        25       500      0.5      0                        
-S4               Gage4            St4              5        25       500      0.5      0                        
+S2               Gage2            st2              70       30       1500     0.5      0
+S3               Gage3            St3              70       30       1500     0.5      0                        
+S4               Gage4            St4              70       30       1500     0.5      0                             
 
 [SUBAREAS]
 ;;Subcatchment   N-Imperv   N-Perv     S-Imperv   S-Perv     PctZero    RouteTo    PctRouted 
 ;;-------------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
 S1               0.01       0.1        0.05       0.05       25         OUTLET    
-S2               0.01       0.1        0.05       0.05       25         OUTLET    
+S2               0.01       0.1        0.05       0.05       25         OUTLET
 S3               0.01       0.1        0.05       0.05       25         OUTLET    
-S4               0.01       0.1        0.05       0.05       25         OUTLET    
+S4               0.01       0.1        0.05       0.05       25         OUTLET  
+    
 
 [INFILTRATION]
 ;;Subcatchment   Suction    Ksat       IMD       
 ;;-------------- ---------- ---------- ----------
 S1               3.5        0.5        0.26      
-S2               3.5        0.5        0.25      
-S3               3.0        0.5        4         
-S4               3.0        0.5        4         
+S2               3.5        0.5        0.25    
+S3               3.5        0.5        0.25         
+S4               3.5        0.5        0.26     
 
 [JUNCTIONS]
 ;;Name           Elevation  MaxDepth   InitDepth  SurDepth   Aponded   
 ;;-------------- ---------- ---------- ---------- ---------- ----------
-J2               90         5          0          0          0         
-J3               0          0          0          0          0         
-J4               0          0          0          0          0         
+J2               90         4          0          0          0         
+J3               88         4          0          0          0
+J4               86         6          0          0          0          
 
 [OUTFALLS]
 ;;Name           Elevation  Type       Stage Data       Gated    Route To        
 ;;-------------- ---------- ---------- ---------------- -------- ----------------
-;Out1             87         TIDAL      tide_even_higher NO
+;Out1             87         TIDAL      tide_even_higher NO                       
 Out1             87         FREE                        NO                       
 
 [STORAGE]
@@ -99,30 +99,30 @@ Out1             87         FREE                        NO
 ;;-------------- -------- ---------- ----------- ---------- ---------------------------- -------- --------          -------- --------
 St1              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
 St2              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
-St3              0        5          0          FUNCTIONAL 1000      0         0        0        0       
-St4              0        5          0          FUNCTIONAL 1000      0         0        0        0       
-St5              0        6          0          FUNCTIONAL 1000      0         0        0        0       
-St6              0        6          0          FUNCTIONAL 1000      0         0        0        0       
+St3              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
+St4              90       5          0.75       FUNCTIONAL 0         0         60000    0        0       
+St5              90       6          0.75       FUNCTIONAL 0         0         60000    0        0       
+St6              90       6          0.75       FUNCTIONAL 0         0         60000    0        0   
 
 [CONDUITS]
 ;;Name           From Node        To Node          Length     Roughness  InOffset   OutOffset  InitFlow   MaxFlow   
 ;;-------------- ---------------- ---------------- ---------- ---------- ---------- ---------- ---------- ----------
-C1               J4               Out1             400        0.01       0          0          0          0         
+C2               J4               Out1             400        0.01       0          0          0          0         
 
 [ORIFICES]
 ;;Name           From Node        To Node          Type         Offset     Qcoeff     Gated    CloseTime 
 ;;-------------- ---------------- ---------------- ------------ ---------- ---------- -------- ----------
-R1               St1              J2               BOTTOM       0          0.65       NO       0.2       
-R2               St2              J2               BOTTOM       0          0.65       NO       0.2       
-R3               St4              J3               SIDE         0          0.65       NO       0         
-R4               St3              J3               SIDE         0          0.65       NO       0         
-R5               St5              J4               SIDE         0          0.65       NO       0         
-R6               St6              J4               SIDE         0          0.65       NO       0         
+R1               St1              J2               BOTTOM       0          0.65       NO       0.2         
+R2               St2              J2               BOTTOM       0          0.65       NO       0.2         
+R3               St4              J3               BOTTOM       0          0.65       NO       0.2         
+R4               St3              J3               BOTTOM       0          0.65       NO       0.2         
+R5               St5              J4               BOTTOM       0          0.65       NO       0.2         
+R6               St6              J4               BOTTOM       0          0.65       NO       0.2  
 
 [XSECTIONS]
 ;;Link           Shape        Geom1            Geom2      Geom3      Geom4      Barrels    Culvert   
 ;;-------------- ------------ ---------------- ---------- ---------- ---------- ---------- ----------
-C1               CIRCULAR     1                0          0          0          1                    
+C2               CIRCULAR     1                0          0          0          1                                  
 R1               CIRCULAR     1                0          0          0
 R2               CIRCULAR     1                0          0          0
 R3               CIRCULAR     1                0          0          0
@@ -1058,10 +1058,11 @@ tide             2/6/2018   23:53      86.852
 2yr12hr_15min_shift 02/06/2018 11:30      3.032     
 2yr12hr_15min_shift 02/06/2018 11:45      3.049     
 2yr12hr_15min_shift 02/06/2018 12:00      3.067     
-2yr12hr_15min_shift 02/06/2018 12:15      3.08      
+2yr12hr_15min_shift 02/06/2018 12:15      3.08
 
 [REPORT]
 ;;Reporting Options
+INPUT      NO
 CONTROLS   YES
 SUBCATCHMENTS ALL
 NODES ALL
@@ -1077,20 +1078,14 @@ Units      None
 ;;Node           X-Coord            Y-Coord           
 ;;-------------- ------------------ ------------------
 J2               2751.524           5609.756          
-J3               3617.886           6151.762          
-J4               3401.084           5609.756          
+J3               4457.901           5570.934          
 Out1             5818.916           5490.196          
 St1              2266.436           5720.877          
 St2              2211.855           4884.742          
-St3              3102.981           6802.168          
-St4              4295.393           6775.068          
-St5              3536.585           5962.060          
-St6              2967.480           5636.856          
 
 [VERTICES]
 ;;Link           X-Coord            Y-Coord           
 ;;-------------- ------------------ ------------------
-R3               4268.293           6666.667          
 
 [Polygons]
 ;;Subcatchment   X-Coord            Y-Coord           
@@ -1108,26 +1103,12 @@ S2               -1003.315          2878.752
 S2               -871.591           3723.977          
 S2               -816.707           4547.248          
 S2               884.720            4602.133          
-S3               1802.168           8075.881          
-S3               2344.173           8861.789          
-S3               3699.187           8644.986          
-S3               3590.786           7344.173          
-S3               2181.572           7181.572          
-S3               1775.068           8130.081          
-S4               5027.100           8401.084          
-S4               6355.014           8970.190          
-S4               7249.322           8373.984          
-S4               7249.322           7750.678          
-S4               5813.008           7344.173          
-S4               5000.000           8428.184          
 
 [SYMBOLS]
 ;;Gage           X-Coord            Y-Coord           
 ;;-------------- ------------------ ------------------
 Gage1            -801.615           7289.504          
 Gage2            -790.081           4798.155          
-Gage3            2615.176           9159.892          
-Gage4            7032.520           9078.591          
 
 
 [PROFILES]

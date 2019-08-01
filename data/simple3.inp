@@ -51,9 +51,9 @@ DRY_ONLY         NO
 [RAINGAGES]
 ;;Name           Format    Interval SCF      Source    
 ;;-------------- --------- ------ ------ ----------
-Gage1            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr
-Gage2            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr
-Gage3            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr         
+Gage1            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr_shift18min
+Gage2            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr_shift18min
+Gage3            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr        
 Gage4            CUMULATIVE 0:06     1.0      TIMESERIES 2yr12hr          
 
 [SUBCATCHMENTS]
