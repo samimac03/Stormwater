@@ -4,13 +4,32 @@ from reward_functions import reward_function2 as reward_function
 from pyswmm import Simulation, Nodes, Links
 import matplotlib.pyplot as plt
 import gym
+import math
 
 
 class StormwaterEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self,R=6, J=4, swmm_inp="data/simple%s.inp"%(random.randint(1,16))):
+    def __init__(self,R=6, J=4, swmm_inp="data/simple%s.inp"%(random.randint(1,1))):
+        month = random.randint(1,11)
+        day = random.randint(1,18)
+        year = random.randint(2010,2018)
+        
+        
+        with open("data/simple1.inp", "r") as File:
+           lines = File.readlines()
+        with open("data/simple1.inp", "w") as File:   
+            for line in lines:
+                if "REPORT_START_DATE" in line:
+                    File.write(line)
+                elif "START_DATE" in line:
+                        File.write("START_DATE  " + str(month)+"/"+str(day)+"/"+str(year)+ "\n")    
+                elif "END_DATE" in line:
+                        File.write("END_DATE  " + str((month))+"/"+str(day+10)+"/"+str(year) + "\n") 
+                else:
+                    File.write(line)
 
+        
 
         super(StormwaterEnv, self).__init__()
         self.total_rewards = []
@@ -30,7 +49,29 @@ class StormwaterEnv(gym.Env):
         self.log_dumps = []
 
     def reset(self):
-        self.swmm_inp="data/simple%s.inp"%(random.randint(1,16))
+
+
+        self.swmm_inp="data/simple%s.inp"%(random.randint(1,1))
+    
+        month = random.randint(1,11)
+        day = random.randint(1,18)
+        year = random.randint(2010,2018)
+        
+        
+        with open("data/simple1.inp", "r") as File:
+           lines = File.readlines()
+        with open("data/simple1.inp", "w") as File:   
+            for line in lines:
+                if "REPORT_START_DATE" in line:
+                    File.write(line)
+                elif "START_DATE" in line:
+                        File.write("START_DATE  " + str(month)+"/"+str(day)+"/"+str(year)+ "\n")    
+                elif "END_DATE" in line:
+                        File.write("END_DATE  " + str((month))+"/"+str(day+10)+"/"+str(year) + "\n") 
+                else:
+                    File.write(line)
+        
+        
         
         self.total_rewards.append(self.eps_reward)
         #self.swmm_inp = 'simple%s.inp'%(random.randint(1,3))
